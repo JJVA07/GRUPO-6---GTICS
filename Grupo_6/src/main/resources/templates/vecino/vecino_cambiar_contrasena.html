@@ -9,78 +9,263 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/vecino_sidebar.css}">
     <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5; /* Fondo suave para la página */
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .main {
+            background-color: #f0f2f5; /* Coherencia con el fondo del body */
+        }
+
+        main.content {
+            padding: 2.5rem; /* Espaciado uniforme para el contenido */
+            display: flex;
+            justify-content: center; /* Centrar el contenido horizontalmente */
+            align-items: flex-start; /* Alinear arriba verticalmente */
+            min-height: calc(100vh - 120px); /* Ajuste para navbar y footer */
+        }
+
+        .container-fluid {
+            background-color: #ffffff; /* Fondo blanco para el contenedor del formulario */
+            border-radius: 18px; /* Bordes más redondeados */
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08); /* Sombra más pronunciada y suave */
+            padding: 2.5rem !important; /* Más padding para el contenido */
+            max-width: 550px; /* Ancho máximo ligeramente ajustado */
+        }
+
+        h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700 !important;
+            color: #212529; /* Color de título más oscuro */
+            margin-bottom: 2.5rem; /* Más espacio debajo del título */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            font-size: 1.8rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 0.6rem;
+            font-size: 0.95rem;
+            display: block;
+        }
+
+        .form-control {
+            border-radius: 10px; /* Bordes redondeados para inputs */
+            padding: 0.9rem 1.2rem; /* Más padding para un mejor tacto */
+            border: 1px solid #e0e0e0;
+            background-color: #f8f9fa; /* Fondo más claro para inputs */
+            font-size: 1rem;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); /* Sombra interna sutil */
+            transition: all 0.2s ease;
+        }
+
+        .form-control:focus {
+            border-color: #86b7fe;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+
         .input-wrapper {
             position: relative;
         }
 
         .input-wrapper input {
-            padding-right: 2.5rem; /* espacio para ícono */
+            padding-right: 3rem; /* Más espacio para ícono */
         }
 
         .input-wrapper i.toggle-password {
             position: absolute;
             top: 50%;
-            right: 0.75rem;
+            right: 1.2rem; /* Posición ajustada */
             transform: translateY(-50%);
             cursor: pointer;
             color: #6c757d;
-            font-size: 1.1rem;
+            font-size: 1.2rem; /* Tamaño del ícono */
+            transition: color 0.2s ease;
+        }
+
+        .input-wrapper i.toggle-password:hover {
+            color: #0d6efd; /* Color al pasar el ratón */
+        }
+
+        .btn-primary, .btn-secondary {
+            padding: 0.8rem 2rem; /* Más padding para los botones */
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 10px; /* Bordes redondeados */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            min-width: 120px; /* Ancho mínimo para consistencia */
+        }
+
+        .btn-primary {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+        .btn-primary:hover {
+            background-color: #0b5ed7;
+            border-color: #0a58ca;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+        }
+
+        .btn-secondary {
+            color: #6c757d;
+            border-color: #6c757d;
+            background-color: transparent;
+        }
+        .btn-secondary:hover {
+            color: #fff;
+            background-color: #6c757d;
+            border-color: #6c757d;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+        }
+
+        .alert {
+            border-radius: 10px;
+            font-weight: 500;
+            padding: 1rem 1.5rem;
+            margin-top: 1.5rem; /* Ajuste del margen superior */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border-color: #c3e6cb;
+        }
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
+        }
+        .alert i {
+            font-size: 1.2rem;
+        }
+
+        footer.footer {
+            background-color: #ffffff; /* Fondo blanco para el footer */
+            border-top: 1px solid #e9ecef;
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+            margin-top: 3rem; /* Más margen superior para el footer */
+        }
+        footer.footer img {
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        ::-webkit-scrollbar {
+            display: none;
+        }
+        /* Media Queries para Responsividad */
+        @media (max-width: 767.98px) { /* Para móviles */
+            main.content {
+                padding: 1.5rem;
+            }
+            .container-fluid {
+                padding: 1.5rem !important;
+                border-radius: 12px;
+            }
+            h3 {
+                font-size: 1.5rem;
+                margin-bottom: 2rem;
+            }
+            .form-control {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+            .input-wrapper i.toggle-password {
+                right: 0.8rem;
+                font-size: 1.1rem;
+            }
+            .btn-primary, .btn-secondary {
+                padding: 0.7rem 1.5rem;
+                font-size: 0.9rem;
+                min-width: 100px;
+            }
+            .alert {
+                font-size: 0.85rem;
+                padding: 0.8rem 1.2rem;
+            }
+            .alert i {
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
 <body>
 <div class="wrapper">
-    <!-- Sidebar -->
     <div th:replace="~{fragments/sidebar-vecino :: sidebar}"></div>
 
-    <!-- Main -->
     <div class="main">
-        <!-- Navbar -->
         <div th:replace="~{fragments/navbar-vecino :: navbar}"></div>
 
-        <!-- Contenido principal -->
         <main class="content">
-            <div class="container-fluid p-4" style="max-width: 600px;">
-                <h3 class="mb-4 text-center">Cambiar Contraseña</h3>
+            <div class="container-fluid">
+                <h3 class="mb-4 text-center">
+                    <i class="bi bi-key-fill me-2 text-primary"></i> Cambiar Contraseña
+                </h3>
 
                 <form th:action="@{/vecino/perfil/cambiar-password}" method="post" onsubmit="return validarFormulario()">
-                    <div class="mb-3">
+                    <div class="mb-4">
                         <label for="actual" class="form-label">Contraseña actual</label>
                         <div class="input-wrapper">
-                            <input type="password" class="form-control" id="actual" name="actual" required>
+                            <input type="password" class="form-control" id="actual" name="actual" required autocomplete="current-password">
                             <i class="bi bi-eye-slash toggle-password" onclick="togglePassword(this, 'actual')"></i>
                         </div>
                     </div>
 
-                    <div class="mb-3">
+                    <div class="mb-4">
                         <label for="nueva" class="form-label">Nueva contraseña</label>
                         <div class="input-wrapper">
-                            <input type="password" class="form-control" id="nueva" name="nuevaClave" required>
+                            <input type="password" class="form-control" id="nueva" name="nuevaClave" required minlength="8" autocomplete="new-password">
                             <i class="bi bi-eye-slash toggle-password" onclick="togglePassword(this, 'nueva')"></i>
                         </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="confirmar" class="form-label">Repetir nueva contraseña</label>
-                        <div class="input-wrapper">
-                            <input type="password" class="form-control" id="confirmar" required>
-                            <i class="bi bi-eye-slash toggle-password" onclick="togglePassword(this, 'confirmar')"></i>
+                        <div id="nuevaPasswordHelp" class="form-text mt-2">
+                            Debe tener al menos 8 caracteres.
                         </div>
                     </div>
 
-                    <div class="d-flex justify-content-between">
-                        <a th:href="@{/vecino/perfil}" class="btn btn-secondary">Cancelar</a>
-                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    <div class="mb-4">
+                        <label for="confirmar" class="form-label">Repetir nueva contraseña</label>
+                        <div class="input-wrapper">
+                            <input type="password" class="form-control" id="confirmar" required autocomplete="new-password">
+                            <i class="bi bi-eye-slash toggle-password" onclick="togglePassword(this, 'confirmar')"></i>
+                        </div>
+                        <div id="confirmarPasswordHelp" class="form-text mt-2">
+                            Debe coincidir con la nueva contraseña.
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a th:href="@{/vecino/perfil}" class="btn btn-secondary">
+                            <i class="bi bi-x-circle-fill me-2"></i> Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle-fill me-2"></i> Guardar
+                        </button>
                     </div>
                 </form>
 
-                <div th:if="${mensajeExito}" class="alert alert-success mt-3" th:text="${mensajeExito}"></div>
-                <div th:if="${mensajeError}" class="alert alert-danger mt-3" th:text="${mensajeError}"></div>
+                <div th:if="${mensajeExito}" class="alert alert-success mt-3" role="alert">
+                    <i class="bi bi-check-circle-fill"></i> <span th:text="${mensajeExito}"></span>
+                </div>
+                <div th:if="${mensajeError}" class="alert alert-danger mt-3" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill"></i> <span th:text="${mensajeError}"></span>
+                </div>
             </div>
         </main>
 
-
-        <!-- Footer -->
         <footer class="footer mt-auto py-3">
             <div class="text-center mt-5 mb-3">
                 <img th:src="@{/img/logo_sanmiguel.png}" alt="Logo" height="60">
@@ -108,15 +293,59 @@
     }
 
     function validarFormulario() {
-        const nueva = document.getElementById('nueva').value;
-        const confirmar = document.getElementById('confirmar').value;
+        const nuevaInput = document.getElementById('nueva');
+        const confirmarInput = document.getElementById('confirmar');
+        const nueva = nuevaInput.value;
+        const confirmar = confirmarInput.value;
 
-        if (nueva !== confirmar) {
-            alert("Las contraseñas nuevas no coinciden.");
+        // Resetear estilos de validación previos
+        nuevaInput.classList.remove('is-invalid', 'is-valid');
+        confirmarInput.classList.remove('is-invalid', 'is-valid');
+
+        // Validar longitud de la nueva contraseña
+        if (nueva.length < 8) {
+            nuevaInput.classList.add('is-invalid');
+            mostrarAlertaFlotante("La nueva contraseña debe tener al menos 8 caracteres.", "danger");
             return false;
         }
+
+        // Validar que las contraseñas coincidan
+        if (nueva !== confirmar) {
+            nuevaInput.classList.add('is-invalid');
+            confirmarInput.classList.add('is-invalid');
+            mostrarAlertaFlotante("Las nuevas contraseñas no coinciden.", "danger");
+            return false;
+        }
+
+        // Si todo es válido
+        nuevaInput.classList.add('is-valid');
+        confirmarInput.classList.add('is-valid');
         return true;
     }
+
+    // Función para mostrar alertas flotantes (toast o similar)
+    function mostrarAlertaFlotante(mensaje, tipo) {
+        const alertaContainer = document.querySelector('main.content .container-fluid');
+        const alertDiv = document.createElement('div');
+        alertDiv.classList.add('alert', `alert-${tipo}`, 'alert-dismissible', 'fade', 'show', 'position-absolute');
+        alertDiv.style.top = '20px';
+        alertDiv.style.right = '20px';
+        alertDiv.style.zIndex = '1050'; // Por encima de otros elementos
+        alertDiv.setAttribute('role', 'alert');
+        alertDiv.innerHTML = `
+            <i class="bi bi-${tipo === 'success' ? 'check-circle-fill' : 'exclamation-triangle-fill'} me-2"></i>
+            ${mensaje}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+        alertaContainer.style.position = 'relative'; // Asegurar que el contenedor sea relativo para la posición absoluta de la alerta
+        alertaContainer.prepend(alertDiv); // Añadir al inicio del contenedor
+
+        setTimeout(() => {
+            const bsAlert = new bootstrap.Alert(alertDiv);
+            bsAlert.close();
+        }, 5000); // La alerta desaparecerá después de 5 segundos
+    }
+
 
     document.addEventListener("DOMContentLoaded", function () {
         const toggle = document.querySelector(".js-sidebar-toggle");
@@ -127,6 +356,25 @@
                 document.body.classList.toggle("sidebar-collapsed");
             });
         }
+
+        // Script para cerrar el sidebar si se hace clic fuera en pantallas pequeñas
+        document.addEventListener('click', function(event) {
+            if (window.innerWidth <= 991.98) { // Ancho de Bootstrap para 'md'
+                const isClickInsideSidebar = sidebar?.contains(event.target);
+                const isClickOnToggle = event.target.closest('.js-sidebar-toggle');
+
+                if (!isClickInsideSidebar && !isClickOnToggle && !document.body.classList.contains("sidebar-collapsed")) {
+                    document.body.classList.add("sidebar-collapsed");
+                }
+            }
+        });
+
+        // Script para asegurar que el sidebar se oculte en pantallas grandes si se redimensiona
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 991.98) {
+                document.body.classList.remove("sidebar-collapsed");
+            }
+        });
     });
 </script>
 <div th:replace="~{fragments/chatbot.html}"></div>

@@ -1,250 +1,412 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Formulario Reservar</title>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
-        <link rel="stylesheet" th:href="@{/css/vecino_sidebar.css}">
-        <style>
-            ::-webkit-scrollbar {
-                display: none;
-            }
-        </style>
-    </head>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Formulario Reservar</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/vecino_sidebar.css}">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5; /* Fondo suave para la página */
+            color: #333;
+            overflow-x: hidden;
+        }
 
-    <body>
-        <div class="wrapper">
-            <!-- Sidebar -->
-            <div th:replace="~{fragments/sidebar-vecino :: sidebar}"></div>
-            <div class="main">
-                <!-- Navbar -->
-                <div th:replace="~{fragments/navbar-vecino :: navbar}"></div>
+        .main {
+            background-color: #f0f2f5; /* Coherencia con el fondo del body */
+        }
 
-                <!-- Contenido principal -->
-                <main class="content">
-                    <div class="container-fluid p-4">
+        main.content {
+            padding: 2.5rem; /* Espaciado uniforme para el contenido */
+            display: flex;
+            justify-content: center; /* Centrar el contenido horizontalmente */
+            align-items: flex-start; /* Alinear arriba verticalmente */
+            min-height: calc(100vh - 120px); /* Ajuste para navbar y footer */
+        }
 
-                        <div class="container mt-4">
-                            <div class="card p-4 shadow rounded">
-                                <form th:action="@{/vecino/reservas/guardar}" th:object="${reserva}" method="post"
-                                      class="mx-auto my-4 p-5 bg-white rounded-4 shadow-lg"
-                                      style="max-width: 800px;">
+        .card.p-4.shadow.rounded {
+            background-color: #ffffff; /* Fondo blanco para la tarjeta principal */
+            border-radius: 20px; /* Bordes más redondeados para la tarjeta contenedora */
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1); /* Sombra más pronunciada */
+            padding: 3rem !important; /* Más padding para la tarjeta */
+            width: 100%; /* Ocupar el ancho completo dentro del container-fluid */
+            max-width: 900px; /* Ancho máximo para una mejor lectura */
+        }
 
-                                    <h3 class="mb-4 text-primary fw-bold text-center">
-                                        <i class="bi bi-calendar-check me-2"></i> Formulario de Reserva
-                                    </h3>
+        form {
+            padding: 0 !important; /* Eliminar el padding extra del formulario interno */
+            box-shadow: none !important; /* Eliminar la sombra extra del formulario interno */
+            background-color: transparent !important; /* Fondo transparente para el formulario interno */
+            max-width: none !important; /* Eliminar el max-width del formulario interno */
+        }
 
-                                    <!-- SEDE -->
-                                    <div class="mb-4">
-                                        <label class="form-label fw-semibold">Sede</label>
-                                        <input type="text" class="form-control form-control-lg bg-light" readonly
-                                               th:value="${reserva?.sedeServicio?.sede?.nombre}">
-                                        <input type="hidden" name="sede.idsede" th:value="${reserva.sedeServicio.sede.idsede}" />
-                                    </div>
+        h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700 !important;
+            color: #0d6efd; /* Color azul principal de Bootstrap */
+            text-align: center;
+            margin-bottom: 2.5rem; /* Más espacio debajo del título */
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
 
-                                    <!-- NOMBRE PERSONALIZADO -->
-                                    <div class="mb-4">
-                                        <label class="form-label fw-semibold">Nombre servicio</label>
-                                        <input type="text" class="form-control form-control-lg bg-light" readonly
-                                               th:value="${reserva.sedeServicio.nombrePersonalizado}">
-                                    </div>
+        .form-label {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 0.6rem;
+            font-size: 0.95rem;
+            display: block;
+        }
 
-                                    <!-- TIPO DE SERVICIO -->
-                                    <div class="mb-4">
-                                        <label class="form-label fw-semibold">Tipo de servicio</label>
-                                        <input type="text" class="form-control form-control-lg bg-light" readonly
-                                               th:value="${reserva.sedeServicio.servicio.tipoServicio.nombre}">
-                                    </div>
+        .form-control, .form-select {
+            border-radius: 10px; /* Bordes redondeados para inputs y selects */
+            padding: 0.9rem 1.2rem; /* Más padding para un mejor tacto */
+            border: 1px solid #e0e0e0;
+            background-color: #f8f9fa; /* Fondo más claro para inputs */
+            font-size: 1rem;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); /* Sombra interna sutil */
+            transition: all 0.2s ease;
+        }
 
-                                    <!-- ID SEDE SERVICIO (oculto) -->
-                                    <input type="hidden" name="sedeServicio.idSedeServicio" th:value="${reserva.sedeServicio.idSedeServicio}" />
+        .form-control[readonly], .form-control.bg-light {
+            background-color: #eee !important; /* Fondo más oscuro para campos de solo lectura */
+            cursor: not-allowed;
+        }
 
+        .form-control:focus, .form-select:focus {
+            border-color: #86b7fe;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
 
-                                    <!-- FECHA -->
-                                    <div class="mb-4">
-                                        <label class="form-label fw-semibold">Fecha de Reserva</label>
-                                        <input type="date" class="form-control form-control-lg" id="fechaReserva" name="fechaReserva" required min="">
-                                    </div>
+        .btn-primary, .btn-outline-secondary {
+            padding: 0.9rem 2.5rem; /* Más padding para los botones */
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 10px; /* Bordes redondeados */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            min-width: 150px; /* Ancho mínimo para consistencia */
+        }
 
-                                    <!-- HORARIO DISPONIBLE -->
-                                    <div class="mb-4">
-                                        <label class="form-label fw-semibold">Horario Disponible</label>
-                                        <select class="form-select form-select-lg" name="horarioDisponible.idhorario" id="horarioDisponible" required>
-                                            <option value="">Seleccione servicio y fecha</option>
-                                        </select>
-                                    </div>
+        .btn-primary:hover {
+            background-color: #0b5ed7;
+            border-color: #0a58ca;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+        }
 
+        .btn-outline-secondary {
+            color: #6c757d;
+            border-color: #6c757d;
+            background-color: transparent;
+        }
 
+        .btn-outline-secondary:hover {
+            color: #fff;
+            background-color: #6c757d;
+            border-color: #6c757d;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+        }
 
-                                    <!-- Botones -->
-                                    <div class="text-center mt-5">
-                                        <button type="submit" class="btn btn-primary btn-lg px-5 me-3">
-                                            <i class="bi bi-check-circle me-1"></i> Reservar
-                                        </button>
-                                        <a th:href="@{/vecino/ListaComplejoDeportivo(idtipo=${idtipoActivo})}"
-                                           class="btn btn-outline-secondary btn-lg px-5">
-                                            <i class="bi bi-x-circle me-1"></i> Cancelar
-                                        </a>
+        footer.footer {
+            background-color: #ffffff; /* Fondo blanco para el footer */
+            border-top: 1px solid #e9ecef;
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+            margin-top: 3rem; /* Más margen superior para el footer */
+        }
 
-                                    </div>
-                                </form>
+        footer.footer img {
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
 
-                                <script>
-                                    const fechaInput = document.getElementById("fechaReserva");
-                                    const horarioSelect = document.getElementById("horarioDisponible");
-                                    const sedeServicioId = document.querySelector("input[name='sedeServicio.idSedeServicio']").value;
+        ::-webkit-scrollbar {
+            display: none;
+        }
 
-                                    function cargarHorariosDisponibles() {
-                                        const fecha = fechaInput.value;
-                                        if (!sedeServicioId || !fecha) {
-                                            horarioSelect.innerHTML = '<option value="">Seleccione servicio y fecha</option>';
-                                            return;
-                                        }
+        /* Estilos del Modal de Bloqueo */
+        .modal-content {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .modal-header {
+            border-bottom: none;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .modal-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        .modal-body {
+            padding: 2rem;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+        .modal-body p {
+            margin-bottom: 1rem;
+        }
+        .btn-close-white {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+        .modal-header.bg-danger { background-color: #dc3545 !important; }
+        .modal-header.bg-warning { background-color: #ffc107 !important; }
+        .modal-header.bg-info { background-color: #0dcaf0 !important; }
+    </style>
+</head>
 
-                                        fetch(`/api/horarios-disponibles-por-fecha?sedeServicioId=${sedeServicioId}&fecha=${fecha}`)
-                                            .then(res => res.json())
-                                            .then(data => {
-                                                horarioSelect.innerHTML = '';
+<body>
+<div class="wrapper">
+    <div th:replace="~{fragments/sidebar-vecino :: sidebar}"></div>
+    <div class="main">
+        <div th:replace="~{fragments/navbar-vecino :: navbar}"></div>
 
-                                                if (!Array.isArray(data) || data.length === 0) {
-                                                    horarioSelect.innerHTML = '<option>No hay horarios disponibles</option>';
-                                                    return;
-                                                }
+        <main class="content">
+            <div class="container-fluid p-4 d-flex justify-content-center align-items-center">
 
-                                                // Opción placeholder
-                                                const placeholder = document.createElement("option");
-                                                placeholder.value = "";
-                                                placeholder.textContent = "Seleccione un horario";
-                                                placeholder.disabled = true;
-                                                placeholder.selected = true;
-                                                horarioSelect.appendChild(placeholder);
+                <div class="card p-4 shadow rounded">
+                    <form th:action="@{/vecino/reservas/guardar}" th:object="${reserva}" method="post">
 
-                                                const hoy = new Date();
-                                                const [year, month, day] = fecha.split("-");
-                                                const fechaSeleccionada = new Date(year, month - 1, day);
+                        <h3 class="mb-4">
+                            <i class="bi bi-calendar-check me-2"></i> Formulario de Reserva
+                        </h3>
 
-                                                data.forEach(h => {
-                                                    const aforoMaximo = parseInt(h.aforoMaximo, 10);
-                                                    const aforoDisponible = parseInt(h.aforoDisponible, 10);
-
-                                                    const [hInicioHoras, hInicioMinutos] = h.horaInicio.split(":").map(Number);
-                                                    const horaInicioDate = new Date(fechaSeleccionada);
-                                                    horaInicioDate.setHours(hInicioHoras, hInicioMinutos, 0, 0);
-
-                                                    const opt = document.createElement("option");
-                                                    opt.value = h.idhorario;
-                                                    opt.textContent = `${h.horaInicio} - ${h.horaFin} (max: ${aforoMaximo}, libres: ${aforoDisponible})`;
-
-                                                    // Si es hoy y la hora ya pasó, deshabilitar
-                                                    if (fechaSeleccionada.toDateString() === hoy.toDateString() && horaInicioDate <= hoy) {
-                                                        opt.disabled = true;
-                                                        opt.textContent += " - HORA PASADA";
-                                                    }
-                                                    // Si ya no hay cupos, deshabilitar
-                                                    else if (aforoDisponible <= 0) {
-                                                        opt.disabled = true;
-                                                        opt.textContent += " - SIN CUPOS";
-                                                    }
-
-                                                    horarioSelect.appendChild(opt);
-                                                });
-                                            })
-                                            .catch(error => {
-                                                console.error("Error al cargar horarios:", error);
-                                                horarioSelect.innerHTML = '<option>Error al cargar horarios</option>';
-                                            });
-                                    }
-
-                                    fechaInput.addEventListener("change", cargarHorariosDisponibles);
-                                </script>
-
-                            </div>
+                        <div class="mb-4">
+                            <label class="form-label">Sede</label>
+                            <input type="text" class="form-control form-control-lg bg-light" readonly
+                                   th:value="${reserva?.sedeServicio?.sede?.nombre}">
+                            <input type="hidden" name="sede.idsede" th:value="${reserva.sedeServicio.sede.idsede}" />
                         </div>
-                    </div>
-                </main>
+
+                        <div class="mb-4">
+                            <label class="form-label">Nombre del Servicio</label>
+                            <input type="text" class="form-control form-control-lg bg-light" readonly
+                                   th:value="${reserva.sedeServicio.nombrePersonalizado}">
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Tipo de Servicio</label>
+                            <input type="text" class="form-control form-control-lg bg-light" readonly
+                                   th:value="${reserva.sedeServicio.servicio.tipoServicio.nombre}">
+                        </div>
+
+                        <input type="hidden" name="sedeServicio.idSedeServicio" th:value="${reserva.sedeServicio.idSedeServicio}" />
 
 
-                <footer class="footer mt-auto py-3">
-                    <div class="text-center mt-5 mb-3">
-                        <img th:src="@{/img/logo_sanmiguel.png}" alt="Logo" height="60">
-                    </div>
-                    <div class="container text-center text-muted">
-                        Municipalidad de San Miguel © 2025
-                    </div>
-                </footer>
-            </div>
-        </div>
+                        <div class="mb-4">
+                            <label for="fechaReserva" class="form-label">Fecha de Reserva</label>
+                            <input type="date" class="form-control form-control-lg" id="fechaReserva" name="fechaReserva" required>
+                        </div>
 
-        <!-- Scripts -->
-        <script src="https://unpkg.com/feather-icons"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-        <script>
-            feather.replace();
-        </script>
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                const toggle = document.querySelector(".js-sidebar-toggle");
-                const sidebar = document.getElementById('sidebar');
-                if (toggle) {
-                    toggle.addEventListener("click", function (e) {
-                        e.preventDefault();
-                        document.body.classList.toggle("sidebar-collapsed");
-                    });
-                }
-            });
-        </script>
+                        <div class="mb-4">
+                            <label for="horarioDisponible" class="form-label">Horario Disponible</label>
+                            <select class="form-select form-select-lg" name="horarioDisponible.idhorario" id="horarioDisponible" required>
+                                <option value="">Seleccione una fecha para ver horarios</option>
+                            </select>
+                        </div>
 
-        <div class="modal fade" id="bloqueoReservaModal" tabindex="-1" aria-labelledby="bloqueoReservaModalLabel" aria-hidden="true"
-             data-bs-backdrop="static" data-bs-keyboard="false">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <!-- CABECERA DEL MODAL -->
-                    <div class="modal-header text-white" th:class="'modal-header bg-' + ${modalColor} + ' text-white'">
-                        <h5 class="modal-title" id="bloqueoReservaModalLabel">Reserva no permitida</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                    </div>
-
-                    <!-- CUERPO DEL MODAL -->
-                    <div class="modal-body">
-                        <p th:text="${mensajeBloqueoPrincipal}">Mensaje principal</p>
-                        <p th:if="${mensajeBloqueoSecundario != null}" th:text="${mensajeBloqueoSecundario}">Mensaje secundario</p>
-                    </div>
+                        <div class="text-center mt-5">
+                            <button type="submit" class="btn btn-primary btn-lg px-5 me-3">
+                                <i class="bi bi-check-circle-fill me-1"></i> Reservar
+                            </button>
+                            <a th:href="@{/vecino/ListaComplejoDeportivo(idtipo=${idtipoActivo})}"
+                               class="btn btn-outline-secondary btn-lg px-5">
+                                <i class="bi bi-x-circle-fill me-1"></i> Cancelar
+                            </a>
+                        </div>
+                    </form>
                 </div>
             </div>
-        </div>
+        </main>
 
+        <footer class="footer mt-auto py-3">
+            <div class="text-center mt-5 mb-3">
+                <img th:src="@{/img/logo_sanmiguel.png}" alt="Logo" height="60">
+            </div>
+            <div class="container text-center text-muted">
+                Municipalidad de San Miguel © 2025
+            </div>
+        </footer>
+    </div>
+</div>
 
-        <!-- Mostrar modal si está bloqueado -->
-        <script th:inline="javascript">
-            /*<![CDATA[*/
-            var reservaBloqueada = [[${reservaBloqueada}]];
-            if (reservaBloqueada) {
-                const modal = new bootstrap.Modal(document.getElementById('bloqueoReservaModal'));
-                modal.show();
-            }
-            /*]]>*/
-        </script>
-
-
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                const fechaInput = document.getElementById("fechaReserva");
-                const hoy = new Date().toISOString().split("T")[0]; // Formato YYYY-MM-DD
-                fechaInput.min = hoy; // Establece fecha mínima como hoy
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggle = document.querySelector(".js-sidebar-toggle");
+        const sidebar = document.getElementById('sidebar');
+        if (toggle) {
+            toggle.addEventListener("click", function (e) {
+                e.preventDefault();
+                document.body.classList.toggle("sidebar-collapsed");
             });
-            document.querySelector("form").addEventListener("submit", function (e) {
-                const selected = horarioSelect.options[horarioSelect.selectedIndex];
-                if (selected && selected.disabled) {
-                    e.preventDefault();
-                    alert("El horario seleccionado ya no está disponible. Por favor, elige otro.");
+        }
+
+        // Script para cerrar el sidebar si se hace clic fuera en pantallas pequeñas
+        document.addEventListener('click', function(event) {
+            if (window.innerWidth <= 991.98) { // Ancho de Bootstrap para 'md'
+                const isClickInsideSidebar = sidebar?.contains(event.target);
+                const isClickOnToggle = event.target.closest('.js-sidebar-toggle');
+
+                if (!isClickInsideSidebar && !isClickOnToggle && !document.body.classList.contains("sidebar-collapsed")) {
+                    document.body.classList.add("sidebar-collapsed");
                 }
-            });
+            }
+        });
 
-        </script>
+        // Script para asegurar que el sidebar se oculte en pantallas grandes si se redimensiona
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 991.98) {
+                document.body.classList.remove("sidebar-collapsed");
+            }
+        });
+    });
+</script>
 
-        <div th:replace="~{fragments/chatbot.html}"></div>
-    </body>
+<div class="modal fade" id="bloqueoReservaModal" tabindex="-1" aria-labelledby="bloqueoReservaModalLabel" aria-hidden="true"
+     data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header text-white" th:classappend="'bg-' + ${modalColor}">
+                <h5 class="modal-title" id="bloqueoReservaModalLabel">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i> Reserva no permitida
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+
+            <div class="modal-body">
+                <p th:text="${mensajeBloqueoPrincipal}">Mensaje principal</p>
+                <p th:if="${mensajeBloqueoSecundario != null}" th:text="${mensajeBloqueoSecundario}">Mensaje secundario</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var reservaBloqueada = [[${reservaBloqueada}]];
+    if (reservaBloqueada) {
+        const modal = new bootstrap.Modal(document.getElementById('bloqueoReservaModal'));
+        modal.show();
+    }
+    /*]]>*/
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const fechaInput = document.getElementById("fechaReserva");
+        const horarioSelect = document.getElementById("horarioDisponible");
+        const sedeServicioId = document.querySelector("input[name='sedeServicio.idSedeServicio']").value;
+
+        // Establecer la fecha mínima de reserva a hoy
+        const hoy = new Date();
+        const hoyFormato = hoy.toISOString().split("T")[0]; // YYYY-MM-DD
+        fechaInput.min = hoyFormato;
+
+        function cargarHorariosDisponibles() {
+            const fecha = fechaInput.value;
+            if (!sedeServicioId || !fecha) {
+                horarioSelect.innerHTML = '<option value="">Seleccione una fecha para ver horarios</option>';
+                return;
+            }
+
+            fetch(`/api/horarios-disponibles-por-fecha?sedeServicioId=${sedeServicioId}&fecha=${fecha}`)
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error(`HTTP error! status: ${res.status}`);
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    horarioSelect.innerHTML = ''; // Limpiar opciones existentes
+
+                    if (!Array.isArray(data) || data.length === 0) {
+                        const noHorariosOpt = document.createElement("option");
+                        noHorariosOpt.value = "";
+                        noHorariosOpt.textContent = "No hay horarios disponibles para esta fecha.";
+                        noHorariosOpt.disabled = true;
+                        noHorariosOpt.selected = true; // Seleccionar por defecto
+                        horarioSelect.appendChild(noHorariosOpt);
+                        return;
+                    }
+
+                    // Opción placeholder
+                    const placeholder = document.createElement("option");
+                    placeholder.value = "";
+                    placeholder.textContent = "Seleccione un horario";
+                    placeholder.disabled = true;
+                    placeholder.selected = true;
+                    horarioSelect.appendChild(placeholder);
+
+                    const fechaSeleccionada = new Date(fecha + 'T00:00:00'); // Asegura que la fecha sea local y sin desfase horario
+                    const ahora = new Date(); // Hora actual para comparar
+
+                    data.forEach(h => {
+                        const aforoMaximo = parseInt(h.aforoMaximo, 10);
+                        const aforoDisponible = parseInt(h.aforoDisponible, 10);
+
+                        const [hInicioHoras, hInicioMinutos] = h.horaInicio.split(":").map(Number);
+                        const horaInicioDate = new Date(fechaSeleccionada);
+                        horaInicioDate.setHours(hInicioHoras, hInicioMinutos, 0, 0);
+
+                        const opt = document.createElement("option");
+                        opt.value = h.idhorario;
+                        opt.textContent = `${h.horaInicio} - ${h.horaFin} (libres: ${aforoDisponible}/${aforoMaximo})`;
+
+                        // Deshabilitar si la hora ya pasó (solo para la fecha actual)
+                        if (fechaSeleccionada.toDateString() === ahora.toDateString() && horaInicioDate <= ahora) {
+                            opt.disabled = true;
+                            opt.textContent += " - (Pasado)";
+                            opt.style.color = '#dc3545'; // Rojo para pasados
+                        }
+                        // Deshabilitar si ya no hay cupos
+                        else if (aforoDisponible <= 0) {
+                            opt.disabled = true;
+                            opt.textContent += " - (Agotado)";
+                            opt.style.color = '#6c757d'; // Gris para agotados
+                        }
+
+                        horarioSelect.appendChild(opt);
+                    });
+                })
+                .catch(error => {
+                    console.error("Error al cargar horarios:", error);
+                    horarioSelect.innerHTML = '<option value="">Error al cargar horarios</option>';
+                    horarioSelect.disabled = true; // Deshabilitar si hay un error
+                });
+        }
+
+        fechaInput.addEventListener("change", cargarHorariosDisponibles);
+
+        // Validar al enviar el formulario
+        document.querySelector("form").addEventListener("submit", function (e) {
+            const selected = horarioSelect.options[horarioSelect.selectedIndex];
+            if (selected && selected.disabled) {
+                e.preventDefault();
+                alert("El horario seleccionado no está disponible. Por favor, elige otro.");
+                // Opcional: mostrar un mensaje más amigable en la UI
+            }
+        });
+
+        // Cargar horarios al inicio si ya hay una fecha preseleccionada (en caso de recarga con datos)
+        if (fechaInput.value) {
+            cargarHorariosDisponibles();
+        }
+    });
+</script>
+
+<div th:replace="~{fragments/chatbot.html}"></div>
+</body>
 </html>

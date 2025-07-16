@@ -4,15 +4,239 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mis reservas - Detalle</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
 
-    <!-- Estilos locales -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/vecino_sidebar.css}">
-    <link rel="stylesheet" th:href="@{/datatables/datatables.min.css}" />
     <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5; /* Fondo suave para la página */
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .main {
+            background-color: #f0f2f5; /* Coherencia con el fondo del body */
+        }
+
+        main.content {
+            padding: 2.5rem; /* Espaciado uniforme para el contenido */
+        }
+
+        .back-button-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem; /* Espacio debajo del botón de retroceso */
+        }
+
+        .back-button-container a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #6c757d;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        .back-button-container a:hover {
+            color: #0d6efd; /* Cambiar color al pasar el ratón */
+        }
+
+        .back-button-container img {
+            height: 45px; /* Tamaño más sutil para el icono de retroceso */
+            width: 45px;
+            margin-right: 0.75rem;
+            transition: transform 0.2s ease;
+        }
+
+        .back-button-container a:hover img {
+            transform: translateX(-5px); /* Efecto de deslizamiento al pasar el ratón */
+        }
+
+        h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            color: #212529; /* Color de título más oscuro */
+            margin-bottom: 2.5rem; /* Más espacio debajo del título */
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .card.p-4 {
+            background-color: #ffffff;
+            border-radius: 18px; /* Bordes más redondeados */
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08); /* Sombra más pronunciada y suave */
+            padding: 2.5rem !important; /* Más padding para el contenido */
+        }
+
+        .card p {
+            margin-bottom: 0.8rem;
+            font-size: 1.05rem;
+            color: #495057; /* Un gris oscuro para el texto */
+        }
+
+        .card p strong {
+            color: #212529; /* Más oscuro para las etiquetas */
+            font-weight: 700;
+            min-width: 150px; /* Ancho fijo para alinear etiquetas */
+            display: inline-block;
+        }
+
+        .img-thumbnail {
+            border-radius: 12px;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        .img-thumbnail:hover {
+            transform: scale(1.01);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        }
+
+        .btn-primary, .btn-success, .btn-outline-secondary {
+            padding: 0.8rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+        .btn-primary:hover {
+            background-color: #0b5ed7;
+            border-color: #0a58ca;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+        .btn-success:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+        }
+
+        .btn-outline-secondary {
+            color: #6c757d;
+            border-color: #6c757d;
+            background-color: transparent;
+        }
+        .btn-outline-secondary:hover {
+            color: #fff;
+            background-color: #6c757d;
+            border-color: #6c757d;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+        }
+
+        .alert-danger {
+            border-radius: 12px;
+            font-weight: 600;
+            padding: 1.2rem;
+            margin-top: 2rem;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 0.6rem;
+            display: block;
+            font-size: 0.95rem;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            padding: 0.9rem 1.2rem;
+            border: 1px solid #e0e0e0;
+            background-color: #f8f9fa;
+            font-size: 1rem;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .qr-code-section {
+            background-color: #f8f9fa;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            text-align: center;
+            box-shadow: inset 0 1px 5px rgba(0,0,0,0.05);
+        }
+        .qr-code-section img {
+            max-height: 200px;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+        .qr-code-section label {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: #343a40;
+        }
+
+        footer.footer {
+            background-color: #ffffff;
+            border-top: 1px solid #e9ecef;
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+            margin-top: 3rem;
+        }
+        footer.footer img {
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        /* Estilos de Modales */
+        .modal-content {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .modal-header {
+            border-bottom: none;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .modal-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
+        .modal-body {
+            padding: 1.5rem 2rem;
+            font-size: 1.05rem;
+        }
+        .modal-body p strong {
+            min-width: 120px; /* Ajuste para las etiquetas del voucher */
+            display: inline-block;
+        }
+        .modal-footer {
+            border-top: none;
+            padding: 1.5rem;
+            justify-content: center;
+        }
+        .modal-footer .btn {
+            border-radius: 8px;
+            padding: 0.6rem 1.5rem;
+            font-weight: 500;
+        }
+        .btn-close-white {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+        .modal-header.bg-warning { background-color: #ffc107 !important; color: #212529 !important;}
+        .modal-header.bg-danger { background-color: #dc3545 !important; }
+        .modal-header.bg-info { background-color: #0dcaf0 !important; }
+
         ::-webkit-scrollbar {
             display: none;
         }
@@ -20,27 +244,27 @@
 </head>
 <body>
 <div class="wrapper">
-    <!-- Sidebar -->
     <div th:replace="~{fragments/sidebar-vecino :: sidebar}"></div>
 
-
     <div class="main">
-        <!-- Navbar -->
         <div th:replace="~{fragments/navbar-vecino :: navbar}"></div>
-        <!-- Contenido -->
         <main class="content">
-            <div class="d-flex align-items-center mb-3">
-                <a th:href="@{/vecino/reservas/historial}" class="text-decoration-none">
-                    <img th:src="@{/img/icons/retroceder.png}" alt="Retroceder" style="height: 60px; width: 60px;">
-                </a>
-            </div>
             <div class="container-fluid p-4">
-                <h2 class="mb-4">Detalle de Reserva</h2>
+                <div class="back-button-container">
+                    <a th:href="@{/vecino/reservas/historial}">
+                        <img th:src="@{/img/icons/retroceder.png}" alt="Retroceder">
+                        <span>Volver al Historial</span>
+                    </a>
+                </div>
+
+                <h2 class="mb-4">
+                    <i class="bi bi-info-circle-fill text-primary"></i> Detalle de Tu Reserva
+                </h2>
+
                 <div id="mensajeAlerta" class="mt-3"></div>
 
-
                 <div class="card p-4">
-                    <p><strong>Fecha de reserva:</strong>
+                    <p><strong>Fecha de Reserva:</strong>
                         <span th:text="${#temporals.format(reserva.fechaReserva, 'dd/MM/yyyy')}"></span>
                     </p>
                     <p><strong>Horario:</strong>
@@ -53,11 +277,9 @@
                     <p><strong>Tipo de Servicio:</strong>
                         <span th:text="${reserva.sedeServicio.servicio.tipoServicio.nombre}"></span>
                     </p>
-
                     <p><strong>Servicio:</strong>
                         <span th:text="${reserva.sedeServicio.nombrePersonalizado}"></span>
                     </p>
-
                     <p><strong>Dirección:</strong>
                         <span th:text="${reserva.sedeServicio.sede.direccion}"></span>
                     </p>
@@ -65,17 +287,16 @@
                         <span th:text="${reserva.estado.nombre}"></span>
                     </p>
                     <p><strong>Monto:</strong>
-                        S/
-                        <span th:text="${reserva.pago?.monto}"></span>
+                        S/ <span th:text="${#numbers.formatDecimal(reserva.pago?.monto,1,'COMMA',2,'POINT')}"></span>
                     </p>
-                    <p><strong>Método de pago:</strong>
+                    <p><strong>Método de Pago:</strong>
                         <span th:text="${reserva.pago?.metodo}"></span>
                     </p>
 
-                    <p><strong>Comprobante de pago:</strong></p>
+                    <hr class="my-4"> <h5 class="mb-3 fw-bold">Comprobante de Pago</h5>
 
-                    <!-- Caso BANCO: muestro la imagen subida a S3 -->
                     <div th:if="${reserva.pago != null and reserva.pago.metodo.name().toLowerCase() == 'banco'}">
+                        <p class="mb-2 text-muted">Aquí puedes ver el comprobante que subiste:</p>
                         <img th:src="@{'/vecino/comprobante/' + ${reserva.pago.idpago}}"
                              alt="Comprobante de pago"
                              class="img-thumbnail border"
@@ -83,91 +304,76 @@
                              onerror="this.onerror=null;this.src='/img/no-image.png';this.alt='Comprobante no disponible';"/>
                     </div>
 
-                    <!-- Caso ONLINE: botón que abre el modal del voucher -->
                     <div th:if="${reserva.pago != null and reserva.pago.metodo.name().toLowerCase() == 'online'}"
                          class="text-center mt-4">
-
-                    <button type="button"
-                                class="btn btn-primary"
-                                data-bs-toggle="modal"
-                                data-bs-target="#voucherModal">
-                            Ver comprobante de tarjeta
+                        <p class="mb-3 text-muted">Tu pago fue realizado con tarjeta virtual.</p>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#voucherModal">
+                            <i class="bi bi-receipt-cutoff me-2"></i> Ver Comprobante de Tarjeta
                         </button>
                     </div>
 
-                    <!-- Opción alternativa: Pago con tarjeta (solo si no hay comprobante, aún está a tiempo y la reserva está pendiente) -->
-                    <div class="form-group mt-4 text-center"
-                         th:if="${reserva.pago?.comprobante == null
-             and reserva.fechaLimitePago != null
-             and ahora.isBefore(reserva.fechaLimitePago)
-             and reserva.estado.nombre == 'pendiente'}">
-
-                    <p class="fw-bold mb-2">¿Prefieres pagar con tarjeta?</p>
-                        <a th:href="@{/vecino/reservas/pago-tarjeta(idreserva=${reserva.idreserva})}" class="btn btn-success">
-                            Pagar con tarjeta
+                    <div class="mt-4 text-center"
+                         th:if="${reserva.pago?.comprobante == null and reserva.fechaLimitePago != null and ahora.isBefore(reserva.fechaLimitePago) and reserva.estado.nombre == 'pendiente'}">
+                        <p class="fw-bold mb-3">¿Prefieres pagar con tarjeta virtual ahora?</p>
+                        <a th:href="@{/vecino/reservas/pago-tarjeta(idreserva=${reserva.idreserva})}" class="btn btn-success btn-lg">
+                            <i class="bi bi-credit-card-fill me-2"></i> Pagar con Tarjeta
                         </a>
                     </div>
 
-
-
-                    <!-- Mostrar mensaje de tiempo expirado -->
                     <div th:if="${reserva.pago?.comprobante == null and reserva.fechaLimitePago != null and ahora.isAfter(reserva.fechaLimitePago)}">
-                        <div class="alert alert-danger text-center fw-bold">
-                            Tiempo de pago expirado. Ya no puedes subir un comprobante.
+                        <div class="alert alert-danger text-center fw-bold mt-4">
+                            <i class="bi bi-clock-history me-2"></i> Tiempo de pago expirado. Ya no puedes subir un comprobante.
                         </div>
                     </div>
 
-                    <!-- Mostrar formulario si el tiempo de pago aún está vigente -->
                     <div th:if="${reserva.pago?.comprobante == null and reserva.fechaLimitePago != null and ahora.isBefore(reserva.fechaLimitePago)}">
-                        <p>No se ha subido ningún comprobante.</p>
+                        <p class="mt-4 mb-3 text-muted">Aún no has subido tu comprobante de pago bancario.</p>
 
                         <form id="formComprobante" th:action="@{/vecino/reservas/comprobante}" method="post" enctype="multipart/form-data">
-
-
                             <input type="hidden" name="idpago" th:value="${reserva.pago.idpago}" />
 
-                            <div class="form-group">
-                                <label for="adjuntar">Adjuntar Comprobante de Pago (.jpg, .png):</label>
-                                <input type="file" class="form-control" id="adjuntar" name="comprobante" accept=".jpg,.jpeg,.png" required />
+                            <div class="form-group mb-4">
+                                <label for="adjuntar">Adjuntar Comprobante de Pago (.jpg, .png, .heic):</label>
+                                <input type="file" class="form-control" id="adjuntar" name="comprobante" accept=".jpg,.jpeg,.png,.heic" required />
                             </div>
 
-                            <div class="form-group mt-4 text-center">
-                                <label class="mb-2 fw-bold">Escanea este código QR para realizar el pago:</label><br>
-                                <img th:src="@{/img/photos/yape.jpg}" alt="QR Yape" class="img-fluid rounded" style="max-height: 250px;">
+                            <div class="qr-code-section mb-4">
+                                <label class="fw-bold">Escanea este código QR para realizar el pago:</label><br>
+                                <img th:src="@{/img/photos/yape.jpg}" alt="QR Yape" class="img-fluid rounded">
+                                <p class="small text-muted mt-2 mb-0">Una vez pagues, sube tu comprobante.</p>
                             </div>
 
-                            <!-- Dentro del formulario -->
                             <div class="form-group mt-3 d-flex justify-content-center">
-                                <button type="button" class="btn btn-primary" id="btnComprobante">Enviar Comprobante</button>
+                                <button type="button" class="btn btn-primary" id="btnComprobante">
+                                    <i class="bi bi-upload me-2"></i> Enviar Comprobante
+                                </button>
                             </div>
-
-
                         </form>
                     </div>
 
-
-                    <p><strong>Fecha límite de pago:</strong>
+                    <p class="mt-4"><strong>Fecha límite de pago:</strong>
                         <span th:text="${#temporals.format(reserva.fechaLimitePago, 'dd/MM/yyyy HH:mm')}"></span>
                     </p>
                 </div>
             </div>
         </main>
-        <!-- Footer -->
         <footer class="footer mt-auto py-3">
-
+            <div class="text-center mt-5 mb-3">
+                <img th:src="@{/img/logo_sanmiguel.png}" alt="Logo" height="60">
+            </div>
             <div class="container text-center text-muted">
                 Municipalidad de San Miguel © 2025
             </div>
         </footer>
-        <!-- Modal de confirmación -->
+
         <div class="modal fade" id="modalConfirmacion" tabindex="-1" aria-labelledby="modalConfirmacionLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content border-warning">
                     <div class="modal-header bg-warning text-dark">
-                    <h5 class="modal-title" id="modalConfirmacionLabel">Confirmar envío</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                        <h5 class="modal-title" id="modalConfirmacionLabel"><i class="bi bi-question-circle-fill me-2"></i> Confirmar envío</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                     </div>
-                    <div class="modal-body text-center">
+                    <div class="modal-body text-center fw-semibold">
                         ¿Estás seguro de subir este comprobante de pago?
                     </div>
                     <div class="modal-footer justify-content-center">
@@ -177,17 +383,17 @@
                 </div>
             </div>
         </div>
-        <!-- Modal de error -->
-        <!-- Modal de error -->
+
         <div class="modal fade" id="modalErrorArchivo" tabindex="-1" aria-labelledby="modalErrorArchivoLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content border-danger">
                     <div class="modal-header bg-danger text-white">
-                        <h5 class="modal-title" id="modalErrorArchivoLabel">Archivo no válido</h5>
+                        <h5 class="modal-title" id="modalErrorArchivoLabel"><i class="bi bi-exclamation-triangle-fill me-2"></i> Archivo no válido</h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                     </div>
                     <div class="modal-body text-center">
-                        <p id="mensajeModalError" class="mb-0 fw-semibold">Archivo no válido. Solo se permiten imágenes JPG, PNG, JPEG o HEIC.</p>
+                        <p id="mensajeModalError" class="mb-0 fw-semibold">Debes seleccionar un comprobante de pago.</p>
+                        <p class="mt-2 small text-muted">Solo se permiten imágenes JPG, PNG, JPEG o HEIC.</p>
                     </div>
                     <div class="modal-footer justify-content-center">
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Entendido</button>
@@ -195,18 +401,13 @@
                 </div>
             </div>
         </div>
-        <!-- Modal para el voucher de pago con tarjeta -->
+
         <div class="modal fade" id="voucherModal" tabindex="-1" aria-labelledby="voucherModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
-
-                    <div class="modal-header">
-                        <!-- Logo y título -->
-                        <img th:src="@{/img/logo.png}" alt="Logo" style="height: 40px; margin-right: 8px;">
-                        <h5 class="modal-title" id="voucherModalLabel">Comprobante de Pago</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    <div class="modal-header bg-primary text-white"> <h5 class="modal-title" id="voucherModalLabel"><i class="bi bi-receipt-cutoff me-2"></i> Comprobante de Pago</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                     </div>
-
                     <div class="modal-body">
                         <p><strong>Voucher #:</strong>
                             <span th:text="${voucherId}">0000</span>
@@ -226,43 +427,46 @@
                         <p><strong>Monto:</strong>
                             S/. <span th:text="${#numbers.formatDecimal(voucherMonto,1,'COMMA',2,'POINT')}">0.00</span>
                         </p>
-                        <p class="text-muted"><em>Este es un comprobante simulado.</em></p>
+                        <p class="text-muted small mt-3 mb-0"><em>Este es un comprobante simulado y no reemplaza un recibo oficial.</em></p>
                     </div>
-
                 </div>
             </div>
         </div>
 
-
     </div>
 </div>
 
-<!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://unpkg.com/feather-icons"></script>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-<script th:src="@{/js/jquery-3.6.0.min.js}"></script>
-<script th:src="@{/datatables/datatables.min.js}"></script>
-<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 <script>
-    $(document).ready(function () {
-        let table = $('#tablaReservas').DataTable({
-            language: {
-                url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggle = document.querySelector(".js-sidebar-toggle");
+        const sidebar = document.getElementById('sidebar');
+        if (toggle) {
+            toggle.addEventListener("click", function (e) {
+                e.preventDefault();
+                document.body.classList.toggle("sidebar-collapsed");
+            });
+        }
+
+        // Script para cerrar el sidebar si se hace clic fuera en pantallas pequeñas
+        document.addEventListener('click', function(event) {
+            if (window.innerWidth <= 991.98) { // Ancho de Bootstrap para 'md'
+                const isClickInsideSidebar = sidebar?.contains(event.target);
+                const isClickOnToggle = event.target.closest('.js-sidebar-toggle');
+
+                if (!isClickInsideSidebar && !isClickOnToggle && !document.body.classList.contains("sidebar-collapsed")) {
+                    document.body.classList.add("sidebar-collapsed");
+                }
             }
         });
 
-        $('#filtroEstado').on('change', function () {
-            table.column(4).search(this.value).draw();
+        // Script para asegurar que el sidebar se oculte en pantallas grandes si se redimensiona
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 991.98) {
+                document.body.classList.remove("sidebar-collapsed");
+            }
         });
     });
-
-    function limpiarFiltros() {
-        $('#filtroEstado').val('');
-        $('#tablaReservas').DataTable().search('').columns().search('').draw();
-    }
 </script>
 <script>
     document.getElementById("btnComprobante").addEventListener("click", function () {
@@ -278,13 +482,12 @@
         const tipo = file.type;
         const nombreArchivo = file.name.toLowerCase();
 
-        const extensionValida = extensionesValidas.includes(tipo) && nombreArchivo.match(/\.(jpg|jpeg|png|heic)$/);
+        const extensionValida = extensionesValidas.includes(tipo) || extensionesValidas.some(ext => nombreArchivo.endsWith(ext.split('/')[1]));
         if (!extensionValida) {
-            mostrarModalError("Archivo no válido. Solo se permiten imágenes JPG, PNG, JPEG o HEIC.", false);
+            mostrarModalError("Archivo no válido. Solo se permiten imágenes JPG, PNG, JPEG o HEIC.");
             return;
         }
 
-        // Si todo es válido, confirmar envío
         const modal = new bootstrap.Modal(document.getElementById("modalConfirmacion"));
         modal.show();
 
@@ -298,30 +501,10 @@
 
     function mostrarModalError(mensaje) {
         document.getElementById("mensajeModalError").innerText = mensaje;
-
         const modalError = new bootstrap.Modal(document.getElementById("modalErrorArchivo"));
         modalError.show();
-
-
     }
 </script>
-<!-- Modal de advertencia sin comprobante -->
-<div class="modal fade" id="modalAdvertencia" tabindex="-1" aria-labelledby="modalAdvertenciaLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-warning">
-            <div class="modal-header bg-warning text-dark">
-                <h5 class="modal-title" id="modalAdvertenciaLabel">Reserva registrada</h5>
-            </div>
-            <div class="modal-body fw-semibold text-center">
-                No se ha subido ningún comprobante de pago.<br>
-                Recuerda que tienes un plazo de <strong>2 horas</strong> para enviarlo o tu reserva será cancelada.
-            </div>
-            <div class="modal-footer justify-content-center">
-                <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Entendido</button>
-            </div>
-        </div>
-    </div>
-</div>
 <div th:replace="~{fragments/chatbot.html}"></div>
 </body>
 </html>

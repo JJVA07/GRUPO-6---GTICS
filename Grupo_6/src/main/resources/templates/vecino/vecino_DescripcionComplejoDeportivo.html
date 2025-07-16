@@ -1,159 +1,377 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Complejos Deportivos</title>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
-        <link rel="stylesheet" th:href="@{/css/vecino_sidebar.css}">
-        <!-- En el <head> -->
-        <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
-        <style>
-            ::-webkit-scrollbar {
-                display: none;
-            }
-            .hover-zoom img {
-                transition: transform 0.4s ease;
-            }
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Detalle del Complejo Deportivo</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/vecino_sidebar.css}">
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5; /* Fondo suave para la página */
+            color: #333;
+            overflow-x: hidden; /* Evitar scroll horizontal */
+        }
 
-            .hover-zoom:hover img {
-                transform: scale(1.03);
-            }
+        .main {
+            background-color: #f0f2f5; /* Coherencia con el fondo del body */
+        }
 
+        main.content {
+            padding: 2.5rem; /* Espaciado uniforme para el contenido */
+        }
+
+        /* Estilo para el botón de retroceso */
+        .back-button-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem; /* Espacio debajo del botón de retroceso */
+            margin-left: 1rem; /* Pequeño margen para separarlo del borde */
+        }
+
+        .back-button-container a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #6c757d;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        .back-button-container a:hover {
+            color: #0d6efd; /* Cambiar color al pasar el ratón */
+        }
+
+        .back-button-container img {
+            height: 45px; /* Tamaño más sutil para el icono de retroceso */
+            width: 45px;
+            margin-right: 0.75rem;
+            transition: transform 0.2s ease;
+        }
+
+        .back-button-container a:hover img {
+            transform: translateX(-5px); /* Efecto de deslizamiento al pasar el ratón */
+        }
+
+        /* Estilo para la tarjeta de detalle */
+        .card.shadow-lg.border-0 {
+            border-radius: 20px; /* Bordes más redondeados */
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1); /* Sombra más pronunciada y suave */
+            overflow: hidden; /* Asegurar que la imagen respete el border-radius */
+        }
+
+        .card-body {
+            padding: 2.5rem; /* Más padding para el contenido dentro de la tarjeta */
+        }
+
+        .card-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700 !important;
+            color: #0d6efd; /* Azul principal de Bootstrap para el título */
+            font-size: 2.2rem; /* Tamaño de fuente ligeramente mayor */
+            margin-bottom: 1.5rem; /* Espacio debajo del título */
+            line-height: 1.2;
+        }
+
+        .text-muted.fst-italic {
+            font-size: 1.05rem;
+            color: #555 !important; /* Un gris más oscuro para la descripción */
+            margin-bottom: 2rem; /* Más espacio debajo de la descripción */
+        }
+        .text-muted.fst-italic i {
+            color: #6c757d; /* Color para el ícono de información */
+        }
+
+        .card-body div.mb-3 {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.2rem !important; /* Espacio entre los detalles */
+        }
+
+        .card-body div.mb-3 strong {
+            min-width: 120px; /* Alinear las etiquetas */
+            color: #343a40; /* Color más oscuro para las etiquetas de detalle */
+            font-size: 1.05rem;
+        }
+
+        .card-body div.mb-3 span {
+            font-size: 1.05rem;
+            color: #495057; /* Color para el valor del detalle */
+        }
+
+        .card-body div.mb-3 i {
+            font-size: 1.25rem; /* Tamaño del ícono */
+            margin-right: 0.75rem;
+            color: #0d6efd; /* Color azul para los íconos de detalle */
+        }
+
+        .badge.bg-success {
+            font-size: 1.15rem; /* Tamaño más grande para el costo */
+            padding: 0.6em 1em;
+            border-radius: 8px; /* Bordes redondeados para el badge */
+            font-weight: 700;
+        }
+
+        .btn-animated {
+            padding: 1.1rem 2.5rem; /* Más padding para el botón */
+            font-size: 1.2rem; /* Tamaño de fuente mayor */
+            font-weight: 600;
+            border-radius: 12px; /* Bordes más redondeados */
+            box-shadow: 0 6px 20px rgba(13, 110, 253, 0.2); /* Sombra más pronunciada */
+            margin-top: 2.5rem; /* Más espacio superior */
+        }
+
+        .btn-animated:hover {
+            transform: translateY(-5px) scale(1.02); /* Efecto levantar y un poco de zoom */
+            box-shadow: 0 10px 25px rgba(13, 110, 253, 0.3);
+        }
+
+        .btn-animated.disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .img-fluid.w-100.h-100 {
+            border-radius: 18px; /* Redondeado para la imagen dentro de la tarjeta */
+            filter: brightness(0.95); /* Ligeramente más oscuro para que el texto resalte si hay */
+        }
+
+        /* Zoom al pasar el mouse en la imagen */
+        .hover-zoom img {
+            transition: transform 0.4s ease;
+        }
+        .hover-zoom:hover img {
+            transform: scale(1.08); /* Aumenta el zoom al pasar el mouse */
+        }
+
+        footer.footer {
+            background-color: #ffffff; /* Fondo blanco para el footer */
+            border-top: 1px solid #e9ecef;
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+            margin-top: 3rem; /* Más margen superior para el footer */
+        }
+        footer.footer img {
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Media Queries para Responsividad */
+        @media (max-width: 991.98px) { /* Para tablets y móviles */
+            main.content {
+                padding: 1.5rem;
+            }
+            .back-button-container {
+                margin-left: 0;
+            }
+            .card-body {
+                padding: 1.5rem;
+            }
+            .card-title {
+                font-size: 1.8rem;
+                margin-bottom: 1rem;
+            }
+            .text-muted.fst-italic {
+                font-size: 0.95rem;
+                margin-bottom: 1.5rem;
+            }
+            .card-body div.mb-3 {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .card-body div.mb-3 strong {
+                min-width: unset;
+                margin-bottom: 0.3rem;
+                font-size: 1rem;
+            }
+            .card-body div.mb-3 span {
+                font-size: 1rem;
+            }
+            .card-body div.mb-3 i {
+                font-size: 1.1rem;
+                margin-right: 0.5rem;
+            }
+            .badge.bg-success {
+                font-size: 1rem;
+                padding: 0.5em 0.8em;
+            }
             .btn-animated {
-                transition: all 0.3s ease-in-out;
+                padding: 0.9rem 2rem;
+                font-size: 1.1rem;
+                margin-top: 2rem;
             }
-
-            .btn-animated:hover {
-                transform: scale(1.05);
-                box-shadow: 0 0 10px rgba(13, 110, 253, 0.5); /* azul Bootstrap */
+            .card.shadow-lg.border-0 {
+                border-radius: 15px;
             }
-        </style>
+            .img-fluid.w-100.h-100 {
+                border-radius: 15px;
+                max-height: 300px !important; /* Ajuste de altura en móviles */
+            }
+        }
 
-    </head>
-    <body>
-        <div class="wrapper">
-            <!-- Sidebar -->
-            <div th:replace="~{fragments/sidebar-vecino :: sidebar}"></div>
-            <div class="main">
-                <!-- Navbar -->
-                <div th:replace="~{fragments/navbar-vecino :: navbar}"></div>
-                <!-- Contenido principal -->
-                <main class="content">
-                    <div class="container py-4">
-                        <div th:replace="~{fragments/opciones-reserva :: opciones-reserva}"></div>
-                        <div class="card shadow-lg border-0 mb-5"
-                             data-aos="zoom-in"
-                             data-aos-duration="900"
-                             data-aos-easing="ease-out-cubic"
-                             data-aos-anchor-placement="top-bottom">
+        @media (max-width: 575.98px) { /* Para móviles pequeños */
+            .card-title {
+                font-size: 1.5rem;
+            }
+            .btn-animated {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div th:replace="~{fragments/sidebar-vecino :: sidebar}"></div>
+    <div class="main">
+        <div th:replace="~{fragments/navbar-vecino :: navbar}"></div>
+        <main class="content">
+            <div class="container py-4">
+                <div class="back-button-container">
+                    <a th:href="@{/vecino/ListaComplejoDeportivo}">
+                        <img th:src="@{/img/icons/retroceder.png}" alt="Retroceder">
+                        <span>Volver a Complejos</span>
+                    </a>
+                </div>
 
+                <div th:replace="~{fragments/opciones-reserva :: opciones-reserva}"></div>
 
-                        <div class="row g-0 align-items-stretch">
-                            <div class="col-md-6 position-relative">
-                                <div style="width:100%; height:100%; max-height:450px; overflow:hidden; border-radius:.25rem;">
-                                    <!-- Imagen del servicio-sede si ya se subió -->
-                                    <img th:if="${sedeServicio.imagen != null}"
-                                         th:src="@{/vecino/imagen-servicio-sede/{id}(id=${sedeServicio.idSedeServicio})}"
-                                         class="img-fluid w-100 h-100"
-                                         style="object-fit:cover;"
-                                         alt="Foto del servicio" />
+                <div class="card shadow-lg border-0 mb-5"
+                     data-aos="zoom-in"
+                     data-aos-duration="900"
+                     data-aos-easing="ease-out-cubic"
+                     data-aos-anchor-placement="top-bottom">
 
-                                    <!-- Placeholder si no hay foto -->
-                                    <img th:if="${sedeServicio.imagen == null}"
-                                         src="/img/servicio-placeholder.png"
-                                         class="img-fluid w-100 h-100"
-                                         style="object-fit:cover;"
-                                         alt="Sin foto del servicio" />
-                                </div>
-                            </div>
+                    <div class="row g-0 align-items-stretch">
+                        <div class="col-md-6 position-relative hover-zoom">
+                            <div style="width:100%; height:100%; max-height:450px; overflow:hidden; border-radius: 20px 0 0 20px;">
+                                <img th:if="${sedeServicio.imagen != null}"
+                                     th:src="@{/vecino/imagen-servicio-sede/{id}(id=${sedeServicio.idSedeServicio})}"
+                                     class="img-fluid w-100 h-100"
+                                     style="object-fit:cover;"
+                                     alt="Foto del servicio" />
 
-                                <div class="col-md-6 d-flex align-items-center">
-                                    <div class="card-body p-4">
-                                        <h2 class="card-title fw-bold mb-3 text-primary"
-                                            th:text="${sedeServicio.nombrePersonalizado != null and !#strings.isEmpty(sedeServicio.nombrePersonalizado) ? sedeServicio.nombrePersonalizado : sedeServicio.servicio.nombre}">
-                                            Nombre del Servicio
-                                        </h2>
-
-
-                                        <p class="text-muted fst-italic mb-3">
-                                            <i class="bi bi-info-circle-fill me-2"></i>
-                                            <span th:text="${sedeServicio.servicio.descripcion}">Descripción detallada</span>
-                                        </p>
-
-                                        <div class="mb-3">
-                                            <i class="bi bi-clock-fill me-2 text-secondary"></i>
-                                            <strong>Horario:</strong>
-                                            <span th:text="${#temporals.format(sedeServicio.servicio.horarioInicio, 'hh:mm a')}"></span> -
-                                            <span th:text="${#temporals.format(sedeServicio.servicio.horarioFin, 'hh:mm a')}"></span>
-
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <i class="bi bi-person-lines-fill me-2 text-secondary"></i>
-                                            <strong>Soporte:</strong>
-                                            <span th:text="${sedeServicio.servicio.contactoSoporte}">987654321</span>
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <i class="bi bi-cash-stack me-2 text-secondary"></i>
-                                            <strong>Costo:</strong>
-                                            <span class="badge bg-success fs-6">S/ <span th:text="${sedeServicio.tarifa.monto}">0.00</span></span>
-                                        </div>
-
-                                        <a th:href="@{'/vecino/reservas/nueva'(idSedeServicio=${sedeServicio.idSedeServicio})}"
-                                           class="btn btn-outline-primary btn-lg w-100 btn-animated"
-                                           th:classappend="${horarios != null and !horarios.isEmpty() and horarios[0].aforoMaximo == 0} ? 'disabled'">
-                                            <i class="bi bi-calendar-check me-2"></i> Reservar ahora
-                                        </a>
-
-                                    </div>
-                                </div>
+                                <img th:if="${sedeServicio.imagen == null}"
+                                     src="/img/servicio-placeholder.png"
+                                     class="img-fluid w-100 h-100"
+                                     style="object-fit:cover;"
+                                     alt="Sin foto del servicio" />
                             </div>
                         </div>
 
-                    </div>
-                </main>
+                        <div class="col-md-6 d-flex align-items-center">
+                            <div class="card-body p-4">
+                                <h2 class="card-title"
+                                    th:text="${sedeServicio.nombrePersonalizado != null && !#strings.isEmpty(sedeServicio.nombrePersonalizado) ? sedeServicio.nombrePersonalizado : sedeServicio.servicio.nombre}">
+                                    Nombre del Servicio
+                                </h2>
 
+                                <p class="text-muted fst-italic mb-3">
+                                    <i class="bi bi-info-circle-fill me-2"></i>
+                                    <span th:text="${sedeServicio.servicio.descripcion}">Descripción detallada</span>
+                                </p>
 
-                <!-- Footer -->
-                <footer class="footer mt-auto py-3">
-                    <div class="text-center mt-5 mb-3">
-                        <img th:src="@{/img/logo_sanmiguel.png}" alt="Logo" height="60">
+                                <div class="mb-3">
+                                    <i class="bi bi-geo-alt-fill me-2"></i>
+                                    <strong>Sede:</strong>
+                                    <span th:text="${sedeServicio.sede.nombre}">Nombre de la Sede</span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <i class="bi bi-clock-fill me-2"></i>
+                                    <strong>Horario General:</strong>
+                                    <span th:text="${#temporals.format(sedeServicio.servicio.horarioInicio, 'hh:mm a')}"></span> -
+                                    <span th:text="${#temporals.format(sedeServicio.servicio.horarioFin, 'hh:mm a')}"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <i class="bi bi-person-lines-fill me-2"></i>
+                                    <strong>Contacto Soporte:</strong>
+                                    <span th:text="${sedeServicio.servicio.contactoSoporte}">987654321</span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <i class="bi bi-cash-stack me-2"></i>
+                                    <strong>Costo por Uso:</strong>
+                                    <span class="badge bg-success fs-6">S/ <span th:text="${#numbers.formatDecimal(sedeServicio.tarifa.monto, 1, 'COMMA', 2, 'POINT')}">0.00</span></span>
+                                </div>
+
+                                <a th:href="@{'/vecino/reservas/nueva'(idSedeServicio=${sedeServicio.idSedeServicio})}"
+                                   class="btn btn-outline-primary btn-lg w-100 btn-animated"
+                                   th:classappend="${horarios != null and !horarios.isEmpty() and horarios[0].aforoMaximo == 0} ? 'disabled'">
+                                    <i class="bi bi-calendar-check me-2"></i> Reservar ahora
+                                </a>
+
+                            </div>
+                        </div>
                     </div>
-                    <div class="container text-center text-muted">
-                        Municipalidad de San Miguel © 2025
-                    </div>
-                </footer>
+                </div>
+
             </div>
-        </div>
+        </main>
 
-        <!-- Scripts -->
-        <script src="https://unpkg.com/feather-icons"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                const toggle = document.querySelector(".js-sidebar-toggle");
-                if (toggle) {
-                    toggle.addEventListener("click", function (e) {
-                        e.preventDefault();
-                        document.body.classList.toggle("sidebar-collapsed");
-                    });
+        <footer class="footer mt-auto py-3">
+            <div class="text-center mt-5 mb-3">
+                <img th:src="@{/img/logo_sanmiguel.png}" alt="Logo" height="60">
+            </div>
+            <div class="container text-center text-muted">
+                Municipalidad de San Miguel © 2025
+            </div>
+        </footer>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggle = document.querySelector(".js-sidebar-toggle");
+        const sidebar = document.getElementById('sidebar'); // Asegúrate de que tu sidebar tenga este ID
+        if (toggle) {
+            toggle.addEventListener("click", function (e) {
+                e.preventDefault();
+                document.body.classList.toggle("sidebar-collapsed");
+            });
+        }
+
+        // Script para cerrar el sidebar si se hace clic fuera en pantallas pequeñas
+        document.addEventListener('click', function(event) {
+            if (window.innerWidth <= 991.98) { // Ancho de Bootstrap para 'md'
+                const isClickInsideSidebar = sidebar?.contains(event.target);
+                const isClickOnToggle = event.target.closest('.js-sidebar-toggle');
+
+                if (!isClickInsideSidebar && !isClickOnToggle && !document.body.classList.contains("sidebar-collapsed")) {
+                    document.body.classList.add("sidebar-collapsed");
                 }
-            });
-        </script>
-        <!-- Antes de cerrar </body> -->
-        <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-        <script>
-            AOS.init({
-                duration: 800,
-                once: true,
-                mirror: false
-            });
-        </script>
+            }
+        });
 
-        <div th:replace="~{fragments/chatbot.html}"></div>
-    </body>
+        // Script para asegurar que el sidebar se oculte en pantallas grandes si se redimensiona
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 991.98) {
+                document.body.classList.remove("sidebar-collapsed");
+            }
+        });
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+    AOS.init({
+        duration: 800,
+        once: true,
+        mirror: false,
+        offset: 150 // Inicia la animación un poco antes de que el elemento entre completamente en la vista
+    });
+</script>
+
+<div th:replace="~{fragments/chatbot.html}"></div>
+</body>
 </html>

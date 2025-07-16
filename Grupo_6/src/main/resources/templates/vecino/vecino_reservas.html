@@ -6,7 +6,6 @@
     <title>Mis reservas</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
 
-    <!-- Estilos locales -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
@@ -14,7 +13,179 @@
     <link rel="stylesheet" th:href="@{/datatables/datatables.min.css}" />
     <style>
         body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5; /* Fondo más suave */
+            color: #333;
             overflow-x: hidden;
+        }
+
+        .main {
+            background-color: #f0f2f5; /* Coherencia con el fondo del body */
+        }
+
+        .content {
+            padding: 2.5rem; /* Espaciado uniforme para el contenido */
+        }
+
+        h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            color: #212529; /* Color de título más oscuro */
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .form-select {
+            border-radius: 10px; /* Bordes redondeados */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Sombra suave */
+            border: 1px solid #dee2e6; /* Borde más sutil */
+            padding: 0.75rem 1.25rem; /* Ajuste de padding */
+            transition: all 0.3s ease; /* Transición suave */
+        }
+
+        .form-select:focus {
+            border-color: #1a7bbd; /* Color de borde al enfocar */
+            box-shadow: 0 0 0 0.25rem rgba(26, 123, 189, 0.2); /* Sombra de enfoque */
+            outline: none;
+        }
+
+        .btn-secondary {
+            border-radius: 10px; /* Bordes redondeados */
+            font-weight: 600;
+            padding: 0.75rem 1.5rem; /* Ajuste de padding */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra para el botón */
+            transition: all 0.3s ease; /* Transición suave */
+            background-color: #6c757d; /* Color original de Bootstrap */
+            border-color: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px); /* Efecto levantar al pasar el mouse */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Sombra más pronunciada al pasar el mouse */
+            background-color: #5a6268; /* Tono más oscuro al pasar el mouse */
+            border-color: #545b62;
+        }
+
+        /* Estilos para DataTables */
+        .dataTables_wrapper .dataTables_filter input,
+        .dataTables_wrapper .dataTables_length select {
+            border-radius: 10px; /* Bordes redondeados */
+            border: 1px solid #ced4da;
+            padding: 0.6rem 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Sombra suave */
+            transition: all 0.3s ease;
+        }
+
+        .dataTables_wrapper .dataTables_filter input:focus,
+        .dataTables_wrapper .dataTables_length select:focus {
+            border-color: #1a7bbd;
+            box-shadow: 0 0 0 0.25rem rgba(26, 123, 189, 0.2);
+            outline: none;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            border-radius: 8px !important; /* Bordes redondeados para paginación */
+            margin: 0 4px; /* Espaciado entre botones */
+            padding: 0.5em 1em;
+            background-color: #e9ecef; /* Fondo claro */
+            border: 1px solid #dee2e6; /* Borde sutil */
+            color: #343a40 !important; /* Color de texto */
+            transition: all 0.2s ease;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+            background-color: #1a7bbd !important; /* Color principal para el botón activo */
+            border-color: #1a7bbd !important;
+            color: white !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Sombra para el botón activo */
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button:hover:not(.current) {
+            background-color: #cfe2ff !important; /* Fondo suave al pasar el mouse */
+            border-color: #a7d0ff !important;
+            transform: translateY(-1px); /* Ligero efecto de levantar */
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
+            color: #6c757d !important;
+            cursor: not-allowed;
+            background-color: #f8f9fa;
+            border-color: #dee2e6;
+        }
+
+        /* Estilos de la tabla en sí */
+        .table-bordered {
+            border-radius: 15px !important; /* Bordes redondeados para toda la tabla */
+            overflow: hidden; /* Asegura que los bordes redondeados se vean */
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); /* Sombra más profunda para la tabla */
+            border: none !important; /* Elimina el borde externo de Bootstrap */
+        }
+
+        .table-bordered thead {
+            background: linear-gradient(90deg, #1a7bbd, #17b5c0); /* Degradado azul para el encabezado */
+            color: white;
+        }
+
+        .table-bordered th,
+        .table-bordered td {
+            border: none; /* Elimina los bordes internos de las celdas */
+            padding: 1.2rem 1rem; /* Espaciado interno de celdas */
+            vertical-align: middle;
+        }
+
+        .table-bordered thead th {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em; /* Espaciado entre letras */
+            padding: 1.5rem 1rem; /* Más padding en el encabezado */
+        }
+
+        .table-bordered tbody tr:nth-child(odd) {
+            background-color: #fcfdfe; /* Color suave para filas impares */
+        }
+
+        .table-bordered tbody tr:nth-child(even) {
+            background-color: #ffffff; /* Fondo blanco para filas pares */
+        }
+
+        .table-bordered tbody tr:hover {
+            background-color: #e6f2ff; /* Color al pasar el mouse por las filas */
+        }
+
+        /* Estilos para los badges de estado */
+        .badge {
+            font-weight: 600;
+            font-size: 0.85em;
+            padding: 0.6em 1em; /* Más padding para que se vean mejor */
+            letter-spacing: 0.02em;
+            border-width: 1px !important; /* Asegura el borde */
+            border-style: solid !important;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Sombra suave para el badge */
+        }
+
+        /* Colores de badges con !important para asegurar sobrescritura */
+        .badge.bg-warning-subtle { background-color: #fff3cd !important; color: #664d03 !important; border-color: #ffc107 !important; }
+        .badge.bg-success-subtle { background-color: #d1e7dd !important; color: #0f5132 !important; border-color: #198754 !important; }
+        .badge.bg-danger-subtle { background-color: #f8d7da !important; color: #842029 !important; border-color: #dc3545 !important; }
+        .badge.bg-secondary-subtle { background-color: #e2e3e5 !important; color: #41464b !important; border-color: #6c757d !important; }
+
+        /* Estilo para el botón "Ver más" */
+        .btn-outline-primary {
+            border: 2px solid #1a7bbd; /* Borde más grueso */
+            color: #1a7bbd;
+            background-color: transparent;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: #1a7bbd;
+            color: white;
+            border-color: #1a7bbd;
+            transform: scale(1.03); /* Ligeramente más grande al pasar el mouse */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra al pasar el mouse */
         }
 
         .table-responsive {
@@ -23,24 +194,46 @@
         ::-webkit-scrollbar {
             display: none;
         }
+
+        footer.footer {
+            background-color: #ffffff; /* Fondo blanco para el footer */
+            border-top: 1px solid #e9ecef;
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+            margin-top: 2rem; /* Espaciado superior */
+        }
+
+        footer.footer img {
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        /* Responsividad básica para el diseño general */
+        @media (max-width: 768px) {
+            .content {
+                padding: 1.5rem;
+            }
+            h2 {
+                font-size: 1.8rem;
+            }
+            /* Asegura que el botón de limpiar filtros se alinee a la izquierda en móvil */
+            .col-md-4.text-end {
+                text-align: start !important;
+                margin-top: 1rem; /* Espacio entre filtro y botón */
+            }
+        }
     </style>
 
 </head>
 <body>
 <div class="wrapper">
-    <!-- Sidebar -->
     <div th:replace="~{fragments/sidebar-vecino :: sidebar}"></div>
 
-
     <div class="main">
-        <!-- Navbar -->
         <div th:replace="~{fragments/navbar-vecino :: navbar}"></div>
-        <!-- Contenido -->
         <main class="content">
             <div class="container-fluid p-4">
                 <h2 class="mb-4 text-center fw-bold">Mis Reservas</h2>
 
-                <!-- Filtros -->
                 <div class="row mb-4">
                     <div class="col-md-8">
                         <select class="form-select" id="filtroEstado">
@@ -52,11 +245,12 @@
 
                     </div>
                     <div class="col-md-4 text-end">
-                        <button class="btn btn-secondary" onclick="limpiarFiltros()">Limpiar filtros</button>
+                        <button class="btn btn-secondary" onclick="limpiarFiltros()">
+                            <i class="bi bi-x-circle me-1"></i> Limpiar filtros
+                        </button>
                     </div>
                 </div>
 
-                <!-- Tabla -->
                 <div class="table-responsive" style="overflow-x: auto; scrollbar-width: none;">
                     <table id="tablaReservas" class="table table-bordered align-middle shadow-sm rounded-4 overflow-hidden">
                         <thead style="background: linear-gradient(90deg, #0d6efd, #0dcaf0); color: white;">
@@ -80,14 +274,14 @@
                             </td>
                             <td th:text="${reserva.sedeServicio.sede.direccion}"></td>
                             <td>
-                    <span th:switch="${reserva.estado.nombre.toLowerCase()}">
-                        <span th:case="'pendiente'" class="badge bg-warning-subtle text-dark border border-warning shadow-sm px-3 py-2 rounded-pill">Pendiente</span>
-                        <span th:case="'aprobado'" class="badge bg-success-subtle text-dark border border-success shadow-sm px-3 py-2 rounded-pill">Aprobado</span>
-                        <span th:case="'aprobada'" class="badge bg-success-subtle text-dark border border-success shadow-sm px-3 py-2 rounded-pill">Aprobada</span>
-                        <span th:case="'rechazado'" class="badge bg-danger-subtle text-dark border border-danger shadow-sm px-3 py-2 rounded-pill">Rechazado</span>
-                        <span th:case="'rechazada'" class="badge bg-danger-subtle text-dark border border-danger shadow-sm px-3 py-2 rounded-pill">Rechazada</span>
-                        <span th:case="*" class="badge bg-secondary-subtle text-dark border border-secondary shadow-sm px-3 py-2 rounded-pill">Desconocido</span>
-                    </span>
+                                <span th:switch="${reserva.estado.nombre.toLowerCase()}">
+                                    <span th:case="'pendiente'" class="badge bg-warning-subtle text-dark border border-warning shadow-sm px-3 py-2 rounded-pill">Pendiente</span>
+                                    <span th:case="'aprobado'" class="badge bg-success-subtle text-dark border border-success shadow-sm px-3 py-2 rounded-pill">Aprobado</span>
+                                    <span th:case="'aprobada'" class="badge bg-success-subtle text-dark border border-success shadow-sm px-3 py-2 rounded-pill">Aprobada</span>
+                                    <span th:case="'rechazado'" class="badge bg-danger-subtle text-dark border border-danger shadow-sm px-3 py-2 rounded-pill">Rechazado</span>
+                                    <span th:case="'rechazada'" class="badge bg-danger-subtle text-dark border border-danger shadow-sm px-3 py-2 rounded-pill">Rechazada</span>
+                                    <span th:case="*" class="badge bg-secondary-subtle text-dark border border-secondary shadow-sm px-3 py-2 rounded-pill">Desconocido</span>
+                                </span>
                             </td>
                             <td>
                                 <a th:href="@{'/vecino/reservas/' + ${reserva.idreserva}}"
@@ -99,11 +293,8 @@
                         </tbody>
                     </table>
                 </div>
-
-
             </div>
         </main>
-        <!-- Footer -->
         <footer class="footer mt-auto py-3">
             <div class="text-center mt-5 mb-3">
                 <img th:src="@{/img/logo_sanmiguel.png}" alt="Logo" height="60">
@@ -115,7 +306,6 @@
     </div>
 </div>
 
-<!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://unpkg.com/feather-icons"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -135,6 +325,25 @@
                 document.body.classList.toggle("sidebar-collapsed");
             });
         }
+
+        // Script para cerrar el sidebar si se hace clic fuera en pantallas pequeñas
+        document.addEventListener('click', function(event) {
+            if (window.innerWidth <= 991.98) { // Ancho de Bootstrap para 'md'
+                const isClickInsideSidebar = sidebar?.contains(event.target);
+                const isClickOnToggle = event.target.closest('.js-sidebar-toggle');
+
+                if (!isClickInsideSidebar && !isClickOnToggle && !document.body.classList.contains("sidebar-collapsed")) {
+                    document.body.classList.add("sidebar-collapsed");
+                }
+            }
+        });
+
+        // Script para asegurar que el sidebar se oculte en pantallas grandes si se redimensiona
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 991.98) {
+                document.body.classList.remove("sidebar-collapsed");
+            }
+        });
     });
 </script>
 <div th:replace="~{fragments/chatbot.html}"></div>
